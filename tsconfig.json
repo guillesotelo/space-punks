@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+      "target": "ES6", // or "ES5" if you need wider browser compatibility
+      "outDir": "./src", // Output directory for transpiled JavaScript files
+      "rootDir": "./src", // Source directory where your TypeScript files are
+      "module": "ESNext", // Specify the module system you're using (ES modules in this case)
+      "strict": true, // Enable strict type checking
+      "esModuleInterop": true, // Allow default imports from CommonJS modules
+      "skipLibCheck": true, // Skip type checking of declaration files
+      "forceConsistentCasingInFileNames": true, // Enforce consistent file naming
+      "declaration": false // If you're building a library, set this to true
+    },
+    "include": ["src/**/*.ts"], // Specify the files to include
+    "exclude": ["node_modules"] // Specify files/folders to exclude from compilation
+  }
+  
