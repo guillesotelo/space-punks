@@ -1,8 +1,8 @@
 const canvas = document.querySelector('canvas')
-
 const c = canvas.getContext('2d')
-canvas.width = 1024
-canvas.height = 567
+const isMobile = window.innerWidth < 800
+canvas.width = isMobile ? window.innerWidth : 1024
+canvas.height = isMobile ? window.innerHeight : 768
 
 class Player {
     constructor() {
@@ -18,14 +18,14 @@ class Player {
         image.src = './assets/spaceship.png'
 
         image.onload = () => {
-            const scale = .1
+            const scale = isMobile ? .06 : .08
             this.image = image
             this.width = image.width * scale
             this.height = image.height * scale
 
             this.position = {
                 x: canvas.width / 2 - this.width / 2,
-                y: canvas.height - this.height - 30,
+                y: canvas.height - this.height - (isMobile ? 80 : 30),
             }
         }
     }
@@ -73,7 +73,7 @@ class Invader {
         image.src = './assets/invader.png'
 
         image.onload = () => {
-            const scale = 1
+            const scale = isMobile ? 250 / window.innerWidth : 1.2
             this.image = image
             this.width = image.width * scale
             this.height = image.height * scale
@@ -128,23 +128,23 @@ class Grid {
         }
 
         this.velocity = {
-            x: 3,
+            x: isMobile ? 2 : 3,
             y: 0
         }
 
         this.invaders = []
 
-        const cols = Math.floor(Math.random() * 12 + 5)
-        const rows = Math.floor(Math.random() * 5 + 2)
+        const cols = Math.floor(Math.random() * (isMobile ? 6 : 12) + 4)
+        const rows = Math.floor(Math.random() * (isMobile ? 4 : 5) + 1)
 
-        this.width = cols * 44
+        this.width = cols * (isMobile ? 0.075 * window.innerWidth : 60)
 
         for (let x = 0; x < cols; x++) {
             for (let y = 0; y < rows; y++) {
                 this.invaders.push(new Invader({
                     position: {
-                        x: x * 45,
-                        y: y * 40
+                        x: x * (isMobile ? 0.08 * window.innerWidth : 60),
+                        y: y * (isMobile ? 0.08 * window.innerWidth : 45),
                     }
                 }))
             }
@@ -280,14 +280,12 @@ function animate() {
     player.update()
 
     particles.forEach((particle, i) => {
-        if (particle.opacity <= 0) {
-            setTimeout(() => particles.splice(i, 1), 0)
+        if (particle.opacity <= 0) setTimeout(() => particles.splice(i, 1), 0)
 
-            // Re-using background particles
-            if (particle.position.y - particle.radius >= canvas.height) {
-                particle.position.x = Math.random() * canvas.width
-                particle.position.y = -particle.radius
-            }
+        // Re-using background particles
+        if (particle.position.y - particle.radius >= canvas.height) {
+            particle.position.x = Math.random() * canvas.width
+            particle.position.y = -particle.radius
         }
         else particle.update()
     })
@@ -401,7 +399,7 @@ const updateScore = () => {
 }
 
 const createUniverse = () => {
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 50; i++) {
         particles.push(new Particle({
             position: {
                 x: Math.random() * canvas.width,
@@ -437,6 +435,22 @@ const createParticles = (object, color, fade) => {
     }
 }
 
+const renderControls = () => {
+    const ctrls = document.querySelector('.game__controls')
+    ctrls.style.display = 'flex'
+    const left = document.querySelector('.game__controls-left')
+    const right = document.querySelector('.game__controls-right')
+    const shootCtrl = document.querySelector('.game__controls-shoot')
+
+    left.addEventListener("touchstart", () => keys.a = true)
+    right.addEventListener("touchstart", () => keys.d = true)
+    shootCtrl.onclick = () => shoot()
+    left.addEventListener("touchend", () => keys.a = false)
+    right.addEventListener("touchend", () => keys.d = false)
+
+}
+if (isMobile) renderControls()
+
 const endGame = () => {
     game.active = false
 
@@ -453,6 +467,13 @@ const endGame = () => {
     body.append(title)
 }
 
+const shoot = () => {
+    projectiles.push(new Projectile(
+        {
+            position: { x: player.position.x + player.width / 2, y: player.position.y },
+            velocity: { x: 0, y: -10 }
+        }))
+}
 // Movements
 addEventListener('keydown', (e) => {
     // console.log(e.code)
@@ -477,11 +498,7 @@ addEventListener('keydown', (e) => {
             break
         case 'Space':
         case 'ControlLeft':
-            projectiles.push(new Projectile(
-                {
-                    position: { x: player.position.x + player.width / 2, y: player.position.y },
-                    velocity: { x: 0, y: -10 }
-                }))
+            shoot()
             break
     }
 })

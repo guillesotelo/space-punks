@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="styles/index.css" />
-    <title>Pixel Punks</title>
-  </head>
-  <body>
-    <h1 class="game__title"></h1>
-    <div class="game__container">
-      <p class="game__score">
-        <span>Score:</span> <span class="game__score-number">0</span>
-      </p>
-      <canvas></canvas>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles/index.css" />
+  <title>Pixel Punks</title>
+</head>
+
+<body>
+  <h1 class="game__title"></h1>
+  <div class="game__container">
+    <p class="game__score">
+      <span>Score:</span> <span class="game__score-number">0</span>
+    </p>
+    <canvas></canvas>
+    <div class="game__controls">
+      <p class="game__controls-left">〈</p>
+      <p class="game__controls-shoot">◉</p>
+      <p class="game__controls-right">〉</p>
     </div>
-    <script src="src/main.js"></script>
-  </body>
+  </div>
+  <script src="src/main.js"></script>
+</body>
+
 </html>

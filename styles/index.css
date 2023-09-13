@@ -6,7 +6,8 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    overflow: hidden;
+    /* height: 100vh; */
 }
 
 .game__container {
@@ -31,4 +32,33 @@ body {
     cursor: pointer;
     font-family: sans-serif;
     font-weight: normal;
+}
+
+.game__controls {
+    display: none;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.game__controls-left {
+    font-size: 2.5rem;
+    margin: 0 .5rem;
+    color: rgba(255, 255, 255, 0.226);
+}
+
+.game__controls-shoot {
+    font-size: 2.5rem;
+    margin: .5rem;
+    color: rgba(255, 255, 255, 0.226);
+}
+
+.game__controls-right {
+    font-size: 2.5rem;
+    margin: 0 .5rem;
+    color: rgba(255, 255, 255, 0.226);
 }
