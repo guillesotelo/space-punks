@@ -38,27 +38,26 @@ body {
     display: none;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
-    gap: 1rem;
+    justify-content: space-between;
     position: absolute;
     bottom: 0;
     width: 100%;
 }
 
 .game__controls-left {
-    font-size: 2.5rem;
+    font-size: 3rem;
     margin: 0 .5rem;
     color: rgba(255, 255, 255, 0.226);
 }
 
 .game__controls-shoot {
-    font-size: 2.5rem;
+    font-size: 3rem;
     margin: .5rem;
     color: rgba(255, 255, 255, 0.226);
 }
 
 .game__controls-right {
-    font-size: 2.5rem;
+    font-size: 3rem;
     margin: 0 .5rem;
     color: rgba(255, 255, 255, 0.226);
 }
