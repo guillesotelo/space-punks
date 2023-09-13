@@ -1,5 +1,34 @@
 body {
     margin: 0;
     background: black;
-    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.game__container {
+    position: relative;
+}
+
+.game__score {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    margin: 1rem;
+    color: white;
+    font-family: sans-serif;
+    font-weight: normal;
+}
+
+.game__title {
+    position: absolute;
+    z-index: 2;
+    color: white;
+    cursor: pointer;
+    font-family: sans-serif;
+    font-weight: normal;
 }
