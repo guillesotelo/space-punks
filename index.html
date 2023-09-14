@@ -11,9 +11,15 @@
 <body>
   <h1 class="game__title"></h1>
   <div class="game__container">
-    <p class="game__score">
-      <span>Score:</span> <span class="game__score-number">0</span>
-    </p>
+    <div class="game__header">
+      <p class="game__score">
+        <span>Score:</span> <span class="game__score-number">0</span>
+      </p>
+      <form class="game__autoshoot">
+        <input type="checkbox" id="autoshoot" name="autoshoot" value="true" title="Autoshoot">
+        <label for="vehicle1">&nbsp; Autoshoot</label><br>
+      </form>
+    </div>
     <canvas></canvas>
     <div class="game__controls">
       <p class="game__controls-left">〈</p>

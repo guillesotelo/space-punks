@@ -8,20 +8,26 @@ body {
     align-items: center;
     overflow: hidden;
     /* height: 100vh; */
+    font-family: sans-serif !important;
 }
 
 .game__container {
     position: relative;
 }
 
-.game__score {
+.game__header {
+    display: flex;
+    flex-direction: row;
     position: absolute;
-    top: 0;
-    left: 0;
+    align-items: center;
+    justify-content: space-between;
     z-index: 2;
+    width: 100%;
+}
+
+.game__score {
     margin: 1rem;
     color: white;
-    font-family: sans-serif;
     font-weight: normal;
 }
 
@@ -70,4 +76,10 @@ body {
     width: 30%;
     text-align: end;
     font-weight: bold;
+}
+
+.game__autoshoot {
+    color: white;
+    display: none;
+    margin: 1rem;
 }

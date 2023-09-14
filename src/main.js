@@ -324,14 +324,22 @@ const renderControls = () => {
     ctrls.style.display = 'flex'
     const left = document.querySelector('.game__controls-left')
     const right = document.querySelector('.game__controls-right')
-    const shootCtrl = document.querySelector('.game__controls-shoot')
+    const autoshootLabel = document.querySelector('.game__autoshoot')
+    const input = document.querySelector('#autoshoot')
+    // const shootCtrl = document.querySelector('.game__controls-shoot')
 
     left.addEventListener("touchstart", () => keys.a = true)
     right.addEventListener("touchstart", () => keys.d = true)
-    shootCtrl.onclick = () => shoot()
+    // shootCtrl.onclick = () => shoot()
     left.addEventListener("touchend", () => keys.a = false)
     right.addEventListener("touchend", () => keys.d = false)
 
+    let intervalId = null
+    autoshootLabel.style.display = 'flex'
+    input.addEventListener('click', () => {
+        if (input.checked) intervalId = setInterval(() => shoot(), 200)
+        else clearInterval(intervalId)
+    })
 }
 if (isMobile) renderControls()
 
