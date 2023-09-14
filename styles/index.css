@@ -32,6 +32,7 @@ body {
     cursor: pointer;
     font-family: sans-serif;
     font-weight: normal;
+    padding: 50vh 0;
 }
 
 .game__controls {
@@ -48,16 +49,25 @@ body {
     font-size: 3rem;
     margin: 0 .5rem;
     color: rgba(255, 255, 255, 0.226);
+    width: 30%;
+    text-align: start;
+    font-weight: bold;
 }
 
 .game__controls-shoot {
     font-size: 3rem;
     margin: .5rem;
     color: rgba(255, 255, 255, 0.226);
+    width: 30%;
+    text-align: center;
+    font-weight: bold;
 }
 
 .game__controls-right {
     font-size: 3rem;
     margin: 0 .5rem;
     color: rgba(255, 255, 255, 0.226);
+    width: 30%;
+    text-align: end;
+    font-weight: bold;
 }

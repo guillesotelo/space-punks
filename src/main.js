@@ -121,7 +121,7 @@ class Invader {
 }
 
 class Grid {
-    constructor() {
+    constructor(score) {
         this.position = {
             x: 0,
             y: 0
@@ -134,17 +134,23 @@ class Grid {
 
         this.invaders = []
 
-        const cols = Math.floor(Math.random() * (isMobile ? 6 : 12) + 4)
-        const rows = Math.floor(Math.random() * (isMobile ? 4 : 5) + 1)
+        const maxCols = isMobile ? 9 : 13
+        const maxRows = isMobile ? 5 : 7
+
+        const colCant = Math.floor((score || 1) / 100) + 4
+        const cols = colCant > maxCols ? maxCols : colCant
+        const rowCant = Math.floor((score || 1) / 200) + 1
+        const rows = rowCant > maxRows ? maxRows : rowCant
 
         this.width = cols * (isMobile ? 0.075 * window.innerWidth : 60)
+        this.height = rows * (isMobile ? 0.075 * window.innerHeight : 60)
 
         for (let x = 0; x < cols; x++) {
             for (let y = 0; y < rows; y++) {
                 this.invaders.push(new Invader({
                     position: {
                         x: x * (isMobile ? 0.08 * window.innerWidth : 60),
-                        y: y * (isMobile ? 0.08 * window.innerWidth : 45),
+                        y: y * (isMobile ? 0.08 * window.innerWidth : 45) + 50,
                     }
                 }))
             }
@@ -170,7 +176,7 @@ class Projectile {
     constructor({ position, velocity }) {
         this.position = position
         this.velocity = velocity
-        this.radius = 4
+        this.radius = 3
     }
 
     draw() {
@@ -182,7 +188,7 @@ class Projectile {
             0,
             Math.PI * 2
         )
-        c.fillStyle = 'red'
+        c.fillStyle = 'yellow'
         c.fill()
         c.closePath()
     }
@@ -250,9 +256,12 @@ class InvaderProjectile {
     }
 }
 
+// vars
+let score = 0
+let frames = 0
 const player = new Player()
 const projectiles = []
-const grids = [new Grid()]
+const grids = [new Grid(score)]
 const invaderProjectiles = []
 const particles = []
 const keys = {
@@ -266,131 +275,6 @@ const game = {
     over: false,
     active: true,
 }
-let score = 0
-
-let frames = 0
-let randInterval = Math.floor(Math.random() * 500 + 500)
-
-// Animation Loop
-function animate() {
-    if (!game.active) return
-    requestAnimationFrame(animate)
-    c.fillStyle = "black"
-    c.fillRect(0, 0, canvas.width, canvas.height)
-    player.update()
-
-    particles.forEach((particle, i) => {
-        if (particle.opacity <= 0) setTimeout(() => particles.splice(i, 1), 0)
-
-        // Re-using background particles
-        if (particle.position.y - particle.radius >= canvas.height) {
-            particle.position.x = Math.random() * canvas.width
-            particle.position.y = -particle.radius
-        }
-        else particle.update()
-    })
-
-    invaderProjectiles.forEach((invaderProjectile, i) => {
-        if (invaderProjectile.position.y + invaderProjectile.height >= canvas.height) {
-            setTimeout(() => invaderProjectiles.splice(i, 1), 0);
-        }
-        else invaderProjectile.update()
-
-        // Projectile hits player
-        if (invaderProjectile.position.y + invaderProjectile.height >= player.position.y &&
-            invaderProjectile.position.y <= player.position.y + player.height &&
-            invaderProjectile.position.x + invaderProjectile.width >= player.position.x &&
-            invaderProjectile.position.x <= player.position.x + player.width) {
-            createParticles(player, 'white', true)
-            setTimeout(() => {
-                invaderProjectiles.splice(i, 1)
-                player.opacity = 0
-                game.over = true
-            }, 0)
-            setTimeout(() => endGame(), 1000)
-        }
-    })
-
-    projectiles.forEach((projectile, i) => {
-        // Remove all not in screen
-        if (projectile.position.y + projectile.radius <= 0) {
-            // Settimeout for preventing projectile flashing
-            setTimeout(() => projectiles.splice(i, 1), 0)
-        }
-        else projectile.update()
-    })
-
-    grids.forEach((grid, gridIndex) => {
-        grid.update()
-
-        // Spawning enemy projectiles
-        if (frames % 100 === 0 && grid.invaders.length > 0) {
-            grid.invaders[Math.floor(Math.random() * grid.invaders.length)].shoot(invaderProjectiles)
-        }
-
-        grid.invaders.forEach((invader, i) => {
-            invader.update({ velocity: grid.velocity })
-
-            // Hit enemy
-            projectiles.forEach((projectile, j) => {
-                if (projectile.position.y - projectile.radius <= invader.position.y + invader.height &&
-                    projectile.position.x + projectile.radius >= invader.position.x &&
-                    projectile.position.x - projectile.radius <= invader.position.x + invader.width &&
-                    projectile.position.y + projectile.radius >= invader.position.y) {
-
-                    updateScore()
-
-                    setTimeout(() => {
-                        // Remove invader & projectile on collision
-                        const invaderFound = grid.invaders.find(wanted => wanted === invader)
-                        const projectileFound = projectiles.find(wanted => wanted === projectile)
-                        if (invaderFound && projectileFound) {
-
-                            // Explosions
-                            createParticles(invader, '', true)
-
-                            grid.invaders.splice(i, 1)
-                            projectiles.splice(j, 1)
-
-                            // If first or last columns removed (shooted), start and finish movements on the new first and last columns
-                            if (grid.invaders.length > 0) {
-                                firstInvader = grid.invaders[0]
-                                lastInvader = grid.invaders[grid.invaders.length - 1]
-
-                                grid.width = lastInvader.position.x - firstInvader.position.x + lastInvader.width
-                                grid.position.x = firstInvader.position.x
-                            } else grids.splice(gridIndex, 1) // Remove garbage
-                        }
-                    }, 0);
-                }
-            })
-        })
-
-    })
-
-    if (keys.a && player.position.x >= 10) {
-        player.velocity.x = -10
-        player.rotation = -0.15
-    }
-    else if (keys.d && player.position.x + player.width <= canvas.width - 10) {
-        player.velocity.x = 10
-        player.rotation = 0.15
-    }
-    else {
-        player.velocity.x = 0
-        player.rotation = 0
-    }
-
-    // Spawning enemies
-    if (frames !== 0 && frames % randInterval === 0) {
-        randInterval = Math.floor(Math.random() * 500 + 500)
-        grids.push(new Grid())
-        frames = 0
-    }
-
-    frames++
-}
-animate()
 
 const updateScore = () => {
     score += 10
@@ -416,7 +300,7 @@ const createUniverse = () => {
 }
 createUniverse()
 
-const createParticles = (object, color, fade) => {
+const createParticles = (object, color, fade, spread = 3) => {
     // Explosion
     for (let i = 0; i < 15; i++) {
         particles.push(new Particle({
@@ -428,8 +312,8 @@ const createParticles = (object, color, fade) => {
                 x: (Math.random() - 0.5) * 2,
                 y: (Math.random() - 0.5) * 2
             },
-            radius: Math.random() * 3,
-            color: color || '#baa0be',
+            radius: Math.random() * spread,
+            color: color || '#eebaff',
             fade
         }))
     }
@@ -474,6 +358,139 @@ const shoot = () => {
             velocity: { x: 0, y: -10 }
         }))
 }
+
+
+// Animation Loop
+function animate() {
+    if (!game.active) return
+    requestAnimationFrame(animate)
+    c.fillStyle = "black"
+    c.fillRect(0, 0, canvas.width, canvas.height)
+    player.update()
+
+    particles.forEach((particle, i) => {
+        if (particle.opacity <= 0) setTimeout(() => particles.splice(i, 1), 0)
+
+        // Re-using background particles
+        if (particle.position.y - particle.radius >= canvas.height) {
+            particle.position.x = Math.random() * canvas.width
+            particle.position.y = -particle.radius
+        }
+        else particle.update()
+    })
+
+    invaderProjectiles.forEach((invaderProjectile, i) => {
+        if (invaderProjectile.position.y + invaderProjectile.height >= canvas.height) {
+            setTimeout(() => invaderProjectiles.splice(i, 1), 0);
+        }
+        else invaderProjectile.update()
+
+        // Projectile hits player
+        if (invaderProjectile.position.y + invaderProjectile.height >= player.position.y &&
+            invaderProjectile.position.y <= player.position.y + player.height &&
+            invaderProjectile.position.x + invaderProjectile.width >= player.position.x &&
+            invaderProjectile.position.x <= player.position.x + player.width) {
+            createParticles(player, 'white', true, 7)
+            setTimeout(() => {
+                invaderProjectiles.splice(i, 1)
+                player.opacity = 0
+                game.over = true
+            }, 0)
+            setTimeout(() => endGame(), 1500)
+        }
+    })
+
+    projectiles.forEach((projectile, i) => {
+        // Remove all not in screen
+        if (projectile.position.y + projectile.radius <= 0) {
+            // Settimeout for preventing projectile flashing
+            setTimeout(() => projectiles.splice(i, 1), 0)
+        }
+        else projectile.update()
+    })
+
+    grids.forEach((grid, gridIndex) => {
+        grid.update()
+
+        // Spawning enemy projectiles
+        if (frames % (Math.floor(Math.random() * 1000)) === 0 && grid.invaders.length > 0) {
+            grid.invaders[Math.floor(Math.random() * grid.invaders.length)].shoot(invaderProjectiles)
+        }
+
+        // Grid gets to player position Y (game over)
+        const lastEnemy = grid.invaders[grid.invaders.length - 1]
+        if (player.position && lastEnemy.position.y + lastEnemy.height >= player.position.y) {
+            player.opacity = 0
+            game.over = true
+            endGame()
+        }
+
+        grid.invaders.forEach((invader, i) => {
+            invader.update({ velocity: grid.velocity })
+
+            // Hit enemy
+            projectiles.forEach((projectile, j) => {
+                if (projectile.position.y - projectile.radius <= invader.position.y + invader.height &&
+                    projectile.position.x + projectile.radius >= invader.position.x &&
+                    projectile.position.x - projectile.radius <= invader.position.x + invader.width &&
+                    projectile.position.y + projectile.radius >= invader.position.y) {
+
+                    updateScore()
+
+                    setTimeout(() => {
+                        // Remove invader & projectile on collision
+                        const invaderFound = grid.invaders.find(wanted => wanted === invader)
+                        const projectileFound = projectiles.find(wanted => wanted === projectile)
+                        if (invaderFound && projectileFound) {
+
+                            // Explosions
+                            createParticles(invader, '', true)
+
+                            grid.invaders.splice(i, 1)
+                            projectiles.splice(j, 1)
+
+                            // If first or last columns removed (shooted), start and finish movements on the new first and last columns
+                            if (grid.invaders.length > 0) {
+                                firstInvader = grid.invaders[0]
+                                lastInvader = grid.invaders[grid.invaders.length - 1]
+
+                                grid.width = lastInvader.position.x - firstInvader.position.x + lastInvader.width
+                                grid.position.x = firstInvader.position.x
+
+
+                            } else grids.splice(gridIndex, 1) // Remove garbage
+                        }
+                    }, 0);
+                }
+            })
+        })
+
+    })
+
+    if (keys.a && player.position.x >= 10) {
+        player.velocity.x = -10
+        player.rotation = -0.15
+    }
+    else if (keys.d && player.position.x + player.width <= canvas.width - 10) {
+        player.velocity.x = 10
+        player.rotation = 0.15
+    }
+    else {
+        player.velocity.x = 0
+        player.rotation = 0
+    }
+
+    // Spawning enemies
+    if (grids.length === 0) {
+        score += 50
+        grids.push(new Grid(score))
+        frames = 0
+    }
+
+    frames++
+}
+animate()
+
 // Movements
 addEventListener('keydown', (e) => {
     // console.log(e.code)
