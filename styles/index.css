@@ -38,7 +38,8 @@ body {
     cursor: pointer;
     font-family: sans-serif;
     font-weight: normal;
-    padding-top: 50vh;
+    padding-top: 30vh;
+    margin: 0 0 .5rem 0;
 }
 
 .game__subtitle {
@@ -48,7 +49,8 @@ body {
     cursor: pointer;
     font-family: sans-serif;
     font-weight: normal;
-    padding-bottom: 50vh;
+    padding-bottom: 30vh;
+    margin: 0;
 }
 
 .game__controls {
@@ -68,6 +70,8 @@ body {
     width: 30%;
     text-align: start;
     font-weight: bold;
+    border: none;
+    background: none;
 }
 
 .game__controls-shoot {
@@ -77,6 +81,8 @@ body {
     width: 30%;
     text-align: center;
     font-weight: bold;
+    border: none;
+    background: none;
 }
 
 .game__controls-right {
@@ -86,6 +92,8 @@ body {
     width: 30%;
     text-align: end;
     font-weight: bold;
+    border: none;
+    background: none;
 }
 
 .game__autoshoot {

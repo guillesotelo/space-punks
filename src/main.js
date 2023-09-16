@@ -351,11 +351,11 @@ const endGame = () => {
     const canvas = document.querySelector('canvas')
     const title = document.querySelector('.game__title')
     const subtitle = document.querySelector('.game__subtitle')
-    const score = document.querySelector('.game__score')
+    const scoreTag = document.querySelector('.game__score')
     const autoshoot = document.querySelector('.game__autoshoot')
 
     canvas.style = 'filter: blur(5px);'
-    score.style = 'filter: blur(5px);'
+    scoreTag.style = 'filter: blur(5px);'
     autoshoot.style = 'filter: blur(5px);'
     title.onclick = () => window.location.reload()
     subtitle.onclick = () => window.location.reload()
