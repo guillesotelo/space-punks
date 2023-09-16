@@ -326,11 +326,12 @@ const renderControls = () => {
     const right = document.querySelector('.game__controls-right')
     const autoshootLabel = document.querySelector('.game__autoshoot')
     const input = document.querySelector('#autoshoot')
-    // const shootCtrl = document.querySelector('.game__controls-shoot')
+    const shootCtrl = document.querySelector('.game__controls-shoot')
 
+    if(input.checked) shootCtrl.style.opacity = 0
+    shootCtrl.onclick = () => input.checked ? null : shoot()
     left.addEventListener("touchstart", () => keys.a = true)
     right.addEventListener("touchstart", () => keys.d = true)
-    // shootCtrl.onclick = () => shoot()
     left.addEventListener("touchend", () => keys.a = false)
     right.addEventListener("touchend", () => keys.d = false)
 
@@ -349,14 +350,20 @@ const endGame = () => {
     const body = document.querySelector('body')
     const canvas = document.querySelector('canvas')
     const title = document.querySelector('.game__title')
+    const subtitle = document.querySelector('.game__subtitle')
     const score = document.querySelector('.game__score')
+    const autoshoot = document.querySelector('.game__autoshoot')
 
     canvas.style = 'filter: blur(5px);'
     score.style = 'filter: blur(5px);'
+    autoshoot.style = 'filter: blur(5px);'
     title.onclick = () => window.location.reload()
+    subtitle.onclick = () => window.location.reload()
     title.innerText = 'Game Over'
+    subtitle.innerText = `${score} points`
 
     body.append(title)
+    body.append(subtitle)
 }
 
 const shoot = () => {
