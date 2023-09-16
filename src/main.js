@@ -361,9 +361,6 @@ const endGame = () => {
     subtitle.onclick = () => window.location.reload()
     title.innerText = 'Game Over'
     subtitle.innerText = `${score} points`
-
-    body.append(title)
-    body.append(subtitle)
 }
 
 const shoot = () => {
