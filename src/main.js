@@ -502,9 +502,14 @@ const startGame = (autoshooting) => {
     let intervalId = autoshooting ? setInterval(() => shoot(), 200) : null
     autoshootLabel.style.display = 'flex'
     inputs.forEach(input => {
-        if (autoshooting) input.checked = true
+        if (autoshooting) {
+            const shootCtrl = document.querySelector('.game__controls-shoot')
+            input.checked = true
+            shootCtrl.style.opacity = 0
+        }
         input.addEventListener('click', () => {
             if (input.checked) {
+                const shootCtrl = document.querySelector('.game__controls-shoot')
                 intervalId = setInterval(() => shoot(), 200)
                 shootCtrl.style.opacity = 0
             }
