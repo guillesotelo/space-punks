@@ -5,12 +5,27 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="styles/index.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <title>Pixel Punks</title>
 </head>
 
 <body>
-  <h1 class="game__title"></h1>
-  <h2 class="game__subtitle"></h2>
+  <div class="game__start">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/b/bc/Twemoji_1f47e.svg" class="game__img" />
+    <h1 class="game__title">Space Punks</h1>
+    <form class="game__start-autoshoot">
+      <input type="checkbox" id="autoshoot" name="autoshoot" value="true" title="Autoshoot">
+      <label for="vehicle1">&nbsp; Autoshoot</label><br>
+    </form>
+    <button class="game__start-btn">Start</button>
+  </div>
+  <div class="game__restart">
+    <h1 class="game__over"></h1>
+    <h2 class="game__endscore"></h2>
+    <button class="game__restart-btn">Restart</button>
+  </div>
   <div class="game__container">
     <div class="game__header">
       <p class="game__score">

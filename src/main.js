@@ -136,10 +136,11 @@ class Grid {
 
         const maxCols = isMobile ? 9 : 13
         const maxRows = isMobile ? 5 : 7
+        const level = Math.floor((score ? score : 1) / 100)
 
-        const colCant = Math.floor((score || 1) / 100) + 4
+        const colCant = level + 4
         const cols = colCant > maxCols ? maxCols : colCant
-        const rowCant = Math.floor((score || 1) / 200) + 1
+        const rowCant = Math.floor(cols / 4) + 1
         const rows = rowCant > maxRows ? maxRows : rowCant
 
         this.width = cols * (isMobile ? 0.075 * window.innerWidth : 60)
@@ -259,11 +260,11 @@ class InvaderProjectile {
 // vars
 let score = 0
 let frames = 0
-const player = new Player()
-const projectiles = []
-const grids = [new Grid(score)]
-const invaderProjectiles = []
-const particles = []
+let player = new Player()
+let projectiles = []
+let grids = [new Grid(score)]
+let invaderProjectiles = []
+let particles = []
 const keys = {
     a: false,
     d: false,
@@ -271,7 +272,7 @@ const keys = {
     s: false,
     space: false,
 }
-const game = {
+let game = {
     over: false,
     active: true,
 }
@@ -317,50 +318,6 @@ const createParticles = (object, color, fade, spread = 3) => {
             fade
         }))
     }
-}
-
-const renderControls = () => {
-    const ctrls = document.querySelector('.game__controls')
-    ctrls.style.display = 'flex'
-    const left = document.querySelector('.game__controls-left')
-    const right = document.querySelector('.game__controls-right')
-    const autoshootLabel = document.querySelector('.game__autoshoot')
-    const input = document.querySelector('#autoshoot')
-    const shootCtrl = document.querySelector('.game__controls-shoot')
-
-    if(input.checked) shootCtrl.style.opacity = 0
-    shootCtrl.onclick = () => input.checked ? null : shoot()
-    left.addEventListener("touchstart", () => keys.a = true)
-    right.addEventListener("touchstart", () => keys.d = true)
-    left.addEventListener("touchend", () => keys.a = false)
-    right.addEventListener("touchend", () => keys.d = false)
-
-    let intervalId = null
-    autoshootLabel.style.display = 'flex'
-    input.addEventListener('click', () => {
-        if (input.checked) intervalId = setInterval(() => shoot(), 200)
-        else clearInterval(intervalId)
-    })
-}
-if (isMobile) renderControls()
-
-const endGame = () => {
-    game.active = false
-
-    const body = document.querySelector('body')
-    const canvas = document.querySelector('canvas')
-    const title = document.querySelector('.game__title')
-    const subtitle = document.querySelector('.game__subtitle')
-    const scoreTag = document.querySelector('.game__score')
-    const autoshoot = document.querySelector('.game__autoshoot')
-
-    canvas.style = 'filter: blur(5px);'
-    scoreTag.style = 'filter: blur(5px);'
-    autoshoot.style = 'filter: blur(5px);'
-    title.onclick = () => window.location.reload()
-    subtitle.onclick = () => window.location.reload()
-    title.innerText = 'Game Over'
-    subtitle.innerText = `${score} points`
 }
 
 const shoot = () => {
@@ -425,7 +382,7 @@ function animate() {
         grid.update()
 
         // Spawning enemy projectiles
-        if (frames % (Math.floor(Math.random() * 1000)) === 0 && grid.invaders.length > 0) {
+        if (frames % (Math.floor(Math.random() * 700)) === 0 && grid.invaders.length > 0) {
             grid.invaders[Math.floor(Math.random() * grid.invaders.length)].shoot(invaderProjectiles)
         }
 
@@ -501,7 +458,93 @@ function animate() {
 
     frames++
 }
-animate()
+
+
+const startGame = (autoshooting) => {
+    const canvas = document.querySelector('canvas')
+    const scoreTag = document.querySelector('.game__score')
+    const scoreNumber = document.querySelector('.game__score-number')
+    const autoshoot = document.querySelector('.game__autoshoot')
+    canvas.style = 'filter: none'
+    scoreTag.style = 'filter: none'
+    autoshoot.style = 'filter: none'
+    scoreNumber.innerText = '0'
+
+    const start = document.querySelector('.game__start')
+    const restart = document.querySelector('.game__restart')
+    const header = document.querySelector('.game__header')
+    start.style.display = 'none'
+    restart.style.display = 'none'
+    header.style.display = 'flex'
+    score = 0
+    frames = 0
+    player = new Player()
+    projectiles = []
+    grids = [new Grid(score)]
+    invaderProjectiles = []
+    particles = []
+    game = { over: false, active: true }
+
+    const ctrls = document.querySelector('.game__controls')
+    ctrls.style.display = isMobile ? 'flex' : 'none'
+    const left = document.querySelector('.game__controls-left')
+    const right = document.querySelector('.game__controls-right')
+    const autoshootLabel = document.querySelector('.game__autoshoot')
+    const inputs = Array.from(document.querySelectorAll('#autoshoot'))
+    const shootCtrl = document.querySelector('.game__controls-shoot')
+
+    shootCtrl.onclick = () => shoot()
+    left.addEventListener("touchstart", () => keys.a = true)
+    right.addEventListener("touchstart", () => keys.d = true)
+    left.addEventListener("touchend", () => keys.a = false)
+    right.addEventListener("touchend", () => keys.d = false)
+
+    let intervalId = autoshooting ? setInterval(() => shoot(), 200) : null
+    autoshootLabel.style.display = 'flex'
+    inputs.forEach(input => {
+        if (autoshooting) input.checked = true
+        input.addEventListener('click', () => {
+            if (input.checked) {
+                intervalId = setInterval(() => shoot(), 200)
+                shootCtrl.style.opacity = 0
+            }
+            else clearInterval(intervalId)
+        })
+    }
+    )
+    animate()
+}
+
+const renderStart = () => {
+    const startBtn = document.querySelector('.game__start-btn')
+    startBtn.onclick = () => {
+        const autoshoot = document.querySelector('#autoshoot')
+        startGame(autoshoot.checked)
+    }
+}
+renderStart()
+
+const endGame = () => {
+    game.active = false
+
+    const canvas = document.querySelector('canvas')
+    const restart = document.querySelector('.game__restart')
+    const restartBtn = document.querySelector('.game__restart-btn')
+    const gameOver = document.querySelector('.game__over')
+    const endScore = document.querySelector('.game__endscore')
+    const scoreTag = document.querySelector('.game__score')
+    const autoshoot = document.querySelector('.game__autoshoot')
+
+    restart.style.display = 'flex'
+    restartBtn.onclick = () => startGame()
+
+    canvas.style = 'filter: blur(5px);'
+    scoreTag.style = 'filter: blur(5px);'
+    autoshoot.style = 'filter: blur(5px);'
+    gameOver.innerText = 'Game Over'
+    endScore.innerText = `${score} points`
+}
+
 
 // Movements
 addEventListener('keydown', (e) => {
@@ -555,3 +598,4 @@ addEventListener('keyup', (e) => {
             break
     }
 })
+

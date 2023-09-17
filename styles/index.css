@@ -16,7 +16,7 @@ body {
 }
 
 .game__header {
-    display: flex;
+    display: none;
     flex-direction: row;
     position: absolute;
     align-items: center;
@@ -31,25 +31,86 @@ body {
     font-weight: normal;
 }
 
+.game__start {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    height: 100vh;
+}
+
 .game__title {
-    position: absolute;
     z-index: 2;
     color: white;
+    font-size: 3rem;
     cursor: pointer;
-    font-family: sans-serif;
+    font-family: 'VT323', monospace;
     font-weight: normal;
-    padding-top: 30vh;
     margin: 0 0 .5rem 0;
 }
 
-.game__subtitle {
+.game__start-btn {
+    border: 1px solid white;
+    color: white;
+    padding: .5rem 2rem;
+    margin-top: 2rem;
+    border-radius: .5rem;
+    background-color: black;
+    background: black;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.game__restart {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    height: 100vh;
+}
+
+.game__over {
+    z-index: 2;
+    color: white;
+    cursor: pointer;
+    font-size: 3rem;
+    font-family: 'VT323', monospace;
+    font-weight: normal;
+    margin: 0 0 .5rem 0;
+}
+
+.game__restart-btn {
+    border: 1px solid white;
+    color: white;
+    padding: .5rem 2rem;
+    margin-top: 2rem;
+    border-radius: .5rem;
+    background-color: black;
+    background: black;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.game__restart-btn:hover {
+    background-color: white;
+    color: black;
+}
+
+.game__start-btn:hover {
+    background-color: white;
+    color: black;
+}
+
+.game__endscore {
     position: absolute;
     z-index: 2;
     color: white;
     cursor: pointer;
     font-family: sans-serif;
+    font-size: 1rem;
     font-weight: normal;
-    padding-bottom: 30vh;
     margin: 0;
 }
 
@@ -94,6 +155,11 @@ body {
     font-weight: bold;
     border: none;
     background: none;
+}
+
+.game__start-autoshoot {
+    color: white;
+    margin: 1rem;
 }
 
 .game__autoshoot {
