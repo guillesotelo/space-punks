@@ -44,10 +44,29 @@ body {
     z-index: 2;
     color: white;
     font-size: 3rem;
-    cursor: pointer;
+    cursor: default;
     font-family: 'VT323', monospace;
     font-weight: normal;
     margin: 0 0 .5rem 0;
+    /* animation: levitate 3s ease-in infinite; */
+    animation-delay: 1s;
+}
+
+.game__img {
+    width: 10rem;
+    animation: levitate 2s ease-in infinite;
+}
+
+@keyframes levitate {
+    0% {
+        transform: translate(0%, 0%);
+    }
+    50% {
+        transform: translate(2%, 4%);
+    }
+    100% {
+        transform: translate(0%, 0%);
+    }
 }
 
 .game__start-btn {
@@ -74,7 +93,7 @@ body {
 .game__over {
     z-index: 2;
     color: white;
-    cursor: pointer;
+    cursor: default;
     font-size: 3rem;
     font-family: 'VT323', monospace;
     font-weight: normal;
@@ -107,7 +126,7 @@ body {
     position: absolute;
     z-index: 2;
     color: white;
-    cursor: pointer;
+    cursor: default;
     font-family: sans-serif;
     font-size: 1rem;
     font-weight: normal;

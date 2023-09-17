@@ -128,7 +128,7 @@ class Grid {
         }
 
         this.velocity = {
-            x: isMobile ? 2 : 3,
+            x: isMobile ? 1.5 : 2.5,
             y: 0
         }
 
@@ -382,7 +382,7 @@ function animate() {
         grid.update()
 
         // Spawning enemy projectiles
-        if (frames % (Math.floor(Math.random() * 700)) === 0 && grid.invaders.length > 0) {
+        if (frames % (Math.floor(Math.random() * 500)) === 0 && grid.invaders.length > 0) {
             grid.invaders[Math.floor(Math.random() * grid.invaders.length)].shoot(invaderProjectiles)
         }
 
